@@ -1,21 +1,66 @@
-MIT License
+LICENÇA PROPRIETÁRIA - TODOS OS DIREITOS RESERVADOS
 
-Copyright (c) 2026 ThaynaBDSVet
+Copyright (c) 2026 Thayná Batista da Silva
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+TODOS OS DIREITOS RESERVADOS.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Este software e todos os arquivos associados (o "Software"), incluindo
+código-fonte, documentação, diagramas e demais materiais deste repositório,
+são propriedade exclusiva de Thayná Batista da Silva.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+NENHUMA PERMISSÃO É CONCEDIDA, de forma expressa ou implícita, para:
+
+  1. Usar, executar ou incorporar o Software em outros projetos;
+  2. Copiar ou reproduzir o Software, no todo ou em parte;
+  3. Modificar, adaptar, traduzir ou criar obras derivadas do Software;
+  4. Distribuir, publicar, sublicenciar, alugar, vender ou transferir
+     o Software a terceiros;
+  5. Utilizar o Software para fins comerciais ou não comerciais.
+
+A visualização do código-fonte neste repositório NÃO constitui concessão
+de qualquer licença ou direito sobre o Software.
+
+Qualquer uso não autorizado do Software constitui violação de direitos
+autorais, nos termos da Lei nº 9.610/98 (Lei de Direitos Autorais) e da
+Lei nº 9.609/98 (Lei do Software) da legislação brasileira, sujeitando o
+infrator às sanções civis e penais cabíveis.
+
+Para solicitar permissão de uso, entre em contato com a titular dos
+direitos autorais.
+
+O SOFTWARE É FORNECIDO "COMO ESTÁ", SEM GARANTIA DE QUALQUER TIPO,
+EXPRESSA OU IMPLÍCITA. EM NENHUMA HIPÓTESE A AUTORA SERÁ RESPONSÁVEL POR
+QUALQUER RECLAMAÇÃO, DANO OU OUTRA RESPONSABILIDADE DECORRENTE DO USO
+NÃO AUTORIZADO DO SOFTWARE.
+
+---
+
+PROPRIETARY LICENSE - ALL RIGHTS RESERVED
+
+Copyright (c) 2026 Thayná Batista da Silva
+
+ALL RIGHTS RESERVED.
+
+This software and associated documentation files (the "Software") are the
+exclusive property of Thayná Batista da Silva.
+
+NO PERMISSION IS GRANTED, expressly or implicitly, to:
+
+  1. Use, run, or incorporate the Software into other projects;
+  2. Copy or reproduce the Software, in whole or in part;
+  3. Modify, adapt, translate, or create derivative works of the Software;
+  4. Distribute, publish, sublicense, rent, sell, or transfer the Software
+     to third parties;
+  5. Use the Software for any commercial or non-commercial purpose.
+
+Viewing the source code in this repository does NOT constitute a grant of
+any license or rights to the Software.
+
+Any unauthorized use of the Software constitutes copyright infringement
+and may subject the infringer to civil and criminal penalties.
+
+To request permission for use, contact the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM UNAUTHORIZED USE OF THE SOFTWARE.
