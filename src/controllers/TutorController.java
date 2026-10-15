@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import models.Animal;
 import models.Tutor;
+import services.RegraNegocioException;
 import services.AnimalService;
 import services.TutorService;
 
@@ -34,9 +35,11 @@ public class TutorController {
             tutor.getContatos().add(scanner.nextLine());
         }
 
-        Tutor salvo = service.cadastrar(tutor);
-        if (salvo != null) {
+        try {
+            Tutor salvo = service.cadastrar(tutor);
             System.out.println("Tutor cadastrado! ID: " + salvo.getId());
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -103,10 +106,14 @@ public class TutorController {
         String endereco = manterOuTrocar(existente.getEndereco());
 
         Tutor novo = new Tutor(id, nome, documento, endereco);
-        if (service.atualizar(id, novo)) {
-            System.out.println("Tutor atualizado!");
-        } else {
-            System.out.println("Falha ao atualizar.");
+        try {
+            if (service.atualizar(id, novo)) {
+                System.out.println("Tutor atualizado!");
+            } else {
+                System.out.println("Falha ao atualizar.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -115,20 +122,28 @@ public class TutorController {
         long id = lerLong();
         System.out.print("Novo contato (tipo livre, ex: WhatsApp: 99999-9999): ");
         String contato = scanner.nextLine();
-        if (service.adicionarContato(id, contato)) {
-            System.out.println("Contato adicionado!");
-        } else {
-            System.out.println("Tutor nao encontrado.");
+        try {
+            if (service.adicionarContato(id, contato)) {
+                System.out.println("Contato adicionado!");
+            } else {
+                System.out.println("Tutor nao encontrado.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     public void deletar() {
         System.out.print("\nID do tutor a deletar: ");
         long id = lerLong();
-        if (service.deletar(id)) {
-            System.out.println("Tutor removido!");
-        } else {
-            System.out.println("Tutor nao encontrado.");
+        try {
+            if (service.deletar(id)) {
+                System.out.println("Tutor removido!");
+            } else {
+                System.out.println("Tutor nao encontrado.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 

@@ -13,7 +13,7 @@ public class TutorRepository {
     }
 
     public List<Tutor> findAll() {
-        return tutores;
+        return new ArrayList<Tutor>(tutores);
     }
 
     public Tutor findById(long id) {
@@ -27,6 +27,9 @@ public class TutorRepository {
     }
 
     public List<Tutor> findByNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Tutor> resultado = new ArrayList<Tutor>();
         for (int i = 0; i < tutores.size(); i++) {
             Tutor tutor = tutores.get(i);
@@ -67,4 +70,9 @@ public class TutorRepository {
         tutores.remove(existente);
         return true;
     }
+
+    public static void limpar() {
+        tutores.clear();
+    }
+
 }

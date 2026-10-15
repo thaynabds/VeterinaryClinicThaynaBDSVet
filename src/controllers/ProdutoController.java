@@ -3,6 +3,7 @@ package controllers;
 import java.util.List;
 import java.util.Scanner;
 import models.Produto;
+import services.RegraNegocioException;
 import services.ProdutoService;
 
 public class ProdutoController {
@@ -24,9 +25,11 @@ public class ProdutoController {
         System.out.print("Setor: ");
         String setor = scanner.nextLine();
 
-        Produto salvo = service.cadastrar(new Produto(nome, valor, quantidade, setor));
-        if (salvo != null) {
+        try {
+            Produto salvo = service.cadastrar(new Produto(nome, valor, quantidade, setor));
             System.out.println("Produto cadastrado! ID: " + salvo.getId());
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -84,8 +87,11 @@ public class ProdutoController {
         double min = lerDouble();
         System.out.print("Valor maximo: R$ ");
         double max = lerDouble();
-        List<Produto> lista = service.buscarPorFaixaDeValor(min, max);
-        if (lista == null) {
+        List<Produto> lista;
+        try {
+            lista = service.buscarPorFaixaDeValor(min, max);
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
             return;
         }
         if (lista.isEmpty()) {
@@ -115,10 +121,14 @@ public class ProdutoController {
         System.out.print("Novo setor: ");
         String setor = scanner.nextLine();
 
-        if (service.atualizar(id, new Produto(id, nome, valor, quantidade, setor))) {
-            System.out.println("Produto atualizado!");
-        } else {
-            System.out.println("Falha ao atualizar.");
+        try {
+            if (service.atualizar(id, new Produto(id, nome, valor, quantidade, setor))) {
+                System.out.println("Produto atualizado!");
+            } else {
+                System.out.println("Falha ao atualizar.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 

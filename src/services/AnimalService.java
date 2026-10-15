@@ -10,27 +10,12 @@ public class AnimalService {
     private AnimalRepository repository = new AnimalRepository();
     private TutorRepository tutorRepository = new TutorRepository();
 
-    public boolean validar(Animal animal) {
-        if (animal.getNome() == null || animal.getNome().trim().isEmpty()) {
-            System.out.println("ERRO: nome do animal e obrigatorio.");
-            return false;
-        }
-        if (animal.getDocumentoTutor() == null || animal.getDocumentoTutor().trim().isEmpty()) {
-            System.out.println("ERRO: documento do tutor e obrigatorio.");
-            return false;
-        }
-        if (animal.getEspecie() == null || animal.getEspecie().trim().isEmpty()) {
-            System.out.println("ERRO: especie do animal e obrigatoria.");
-            return false;
-        }
-        return true;
-    }
-
     public Animal cadastrar(Animal animal) {
-        if (!validar(animal)) {
-            return null;
-        }
-        return repository.create(animal);
+        validar(animal);
+        Tutor tutor = exigirTutor(animal.getDocumentoTutor());
+        Animal salvo = repository.create(animal);
+        new TutorService().adicionarAnimal(tutor.getId(), salvo);
+        return salvo;
     }
 
     public List<Animal> listar() {
@@ -54,10 +39,14 @@ public class AnimalService {
     }
 
     public boolean atualizar(long id, Animal novo) {
-        if (!validar(novo)) {
+        validar(novo);
+        Tutor tutor = exigirTutor(novo.getDocumentoTutor());
+        if (!repository.update(id, novo)) {
             return false;
         }
-        return repository.update(id, novo);
+        Animal salvo = repository.findById(id);
+        new TutorService().adicionarAnimal(tutor.getId(), salvo);
+        return true;
     }
 
     public boolean deletar(long id) {
@@ -65,13 +54,34 @@ public class AnimalService {
         if (animal == null) {
             return false;
         }
-
         List<Tutor> tutores = tutorRepository.findAll();
         for (int i = 0; i < tutores.size(); i++) {
-            Tutor tutor = tutores.get(i);
-            tutor.getAnimais().remove(animal);
+            tutores.get(i).getAnimais().remove(animal);
         }
-
         return repository.delete(id);
+    }
+
+    private void validar(Animal animal) {
+        if (animal.getNome() == null || animal.getNome().trim().isEmpty()) {
+            throw new RegraNegocioException("Nome do animal e obrigatorio.");
+        }
+        if (animal.getDocumentoTutor() == null || animal.getDocumentoTutor().trim().isEmpty()) {
+            throw new RegraNegocioException("Documento do tutor e obrigatorio.");
+        }
+        if (animal.getEspecie() == null || animal.getEspecie().trim().isEmpty()) {
+            throw new RegraNegocioException("Especie do animal e obrigatoria.");
+        }
+        animal.setNome(animal.getNome().trim());
+        animal.setDocumentoTutor(animal.getDocumentoTutor().trim());
+        animal.setEspecie(animal.getEspecie().trim());
+    }
+
+    private Tutor exigirTutor(String documento) {
+        Tutor tutor = tutorRepository.findByDocumento(documento);
+        if (tutor == null) {
+            throw new RegraNegocioException(
+                    "Nao existe tutor com esse documento. Cadastre o tutor antes do animal.");
+        }
+        return tutor;
     }
 }

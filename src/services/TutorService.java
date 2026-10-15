@@ -9,13 +9,9 @@ public class TutorService {
     private TutorRepository repository = new TutorRepository();
 
     public Tutor cadastrar(Tutor tutor) {
-        if (tutor.getNomeCompleto() == null || tutor.getNomeCompleto().trim().isEmpty()) {
-            System.out.println("ERRO: nome do tutor e obrigatorio.");
-            return null;
-        }
-        if (tutor.getDocumento() == null || tutor.getDocumento().trim().isEmpty()) {
-            System.out.println("ERRO: documento do tutor e obrigatorio.");
-            return null;
+        validar(tutor);
+        if (repository.findByDocumento(tutor.getDocumento()) != null) {
+            throw new RegraNegocioException("Ja existe tutor com esse documento.");
         }
         return repository.create(tutor);
     }
@@ -33,28 +29,36 @@ public class TutorService {
     }
 
     public Tutor buscarPorDocumento(String documento) {
-        return repository.findByDocumento(documento);
+        if (documento == null) {
+            return null;
+        }
+        return repository.findByDocumento(documento.trim());
     }
 
     public boolean atualizar(long id, Tutor novo) {
-        if (novo.getNomeCompleto() == null || novo.getNomeCompleto().trim().isEmpty()) {
-            System.out.println("ERRO: nome do tutor e obrigatorio.");
-            return false;
-        }
-        if (novo.getDocumento() == null || novo.getDocumento().trim().isEmpty()) {
-            System.out.println("ERRO: documento do tutor e obrigatorio.");
-            return false;
+        validar(novo);
+        Tutor outro = repository.findByDocumento(novo.getDocumento());
+        if (outro != null && outro.getId() != id) {
+            throw new RegraNegocioException("Ja existe tutor com esse documento.");
         }
         return repository.update(id, novo);
     }
 
     public boolean deletar(long id) {
+        Tutor tutor = repository.findById(id);
+        if (tutor == null) {
+            return false;
+        }
+        if (!tutor.getAnimais().isEmpty()) {
+            throw new RegraNegocioException(
+                    "Nao e possivel apagar o tutor enquanto houver animal na ficha.");
+        }
         return repository.delete(id);
     }
 
     public boolean adicionarAnimal(long idTutor, Animal animal) {
         Tutor tutor = repository.findById(idTutor);
-        if (tutor == null) {
+        if (tutor == null || animal == null) {
             return false;
         }
 
@@ -75,9 +79,8 @@ public class TutorService {
             }
         }
         if (!tutorJaVinculado) {
-            animal.getIdsTutores().add(idTutor);
+            animal.getIdsTutores().add(Long.valueOf(idTutor));
         }
-
         return true;
     }
 
@@ -87,10 +90,20 @@ public class TutorService {
             return false;
         }
         if (contato == null || contato.trim().isEmpty()) {
-            System.out.println("ERRO: contato nao pode ser vazio.");
-            return false;
+            throw new RegraNegocioException("Contato nao pode ser vazio.");
         }
-        tutor.getContatos().add(contato);
+        tutor.getContatos().add(contato.trim());
         return true;
+    }
+
+    private void validar(Tutor tutor) {
+        if (tutor.getNomeCompleto() == null || tutor.getNomeCompleto().trim().isEmpty()) {
+            throw new RegraNegocioException("Nome do tutor e obrigatorio.");
+        }
+        if (tutor.getDocumento() == null || tutor.getDocumento().trim().isEmpty()) {
+            throw new RegraNegocioException("Documento do tutor e obrigatorio.");
+        }
+        tutor.setNomeCompleto(tutor.getNomeCompleto().trim());
+        tutor.setDocumento(tutor.getDocumento().trim());
     }
 }

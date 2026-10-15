@@ -13,7 +13,7 @@ public class AnimalRepository {
     }
 
     public List<Animal> findAll() {
-        return animais;
+        return new ArrayList<Animal>(animais);
     }
 
     public Animal findById(long id) {
@@ -27,6 +27,9 @@ public class AnimalRepository {
     }
 
     public List<Animal> findByNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Animal> resultado = new ArrayList<Animal>();
         for (int i = 0; i < animais.size(); i++) {
             Animal animal = animais.get(i);
@@ -39,6 +42,9 @@ public class AnimalRepository {
     }
 
     public List<Animal> findByEspecie(String especie) {
+        if (especie == null || especie.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Animal> resultado = new ArrayList<Animal>();
         for (int i = 0; i < animais.size(); i++) {
             Animal animal = animais.get(i);
@@ -51,6 +57,9 @@ public class AnimalRepository {
     }
 
     public List<Animal> findByDocumentoTutor(String documentoTutor) {
+        if (documentoTutor == null || documentoTutor.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Animal> resultado = new ArrayList<Animal>();
         for (int i = 0; i < animais.size(); i++) {
             Animal animal = animais.get(i);
@@ -91,4 +100,9 @@ public class AnimalRepository {
         animais.remove(existente);
         return true;
     }
+
+    public static void limpar() {
+        animais.clear();
+    }
+
 }

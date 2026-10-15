@@ -13,7 +13,7 @@ public class SetorRepository {
     }
 
     public List<Setor> findAll() {
-        return setores;
+        return new ArrayList<Setor>(setores);
     }
 
     public Setor findById(long id) {
@@ -27,6 +27,9 @@ public class SetorRepository {
     }
 
     public List<Setor> findByNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Setor> resultado = new ArrayList<Setor>();
         for (int i = 0; i < setores.size(); i++) {
             Setor setor = setores.get(i);
@@ -56,4 +59,22 @@ public class SetorRepository {
         setores.remove(existente);
         return true;
     }
+
+    public Setor findByNomeExato(String nome) {
+        if (nome == null) {
+            return null;
+        }
+        for (int i = 0; i < setores.size(); i++) {
+            Setor setor = setores.get(i);
+            if (setor.getNome() != null && setor.getNome().equalsIgnoreCase(nome.trim())) {
+                return setor;
+            }
+        }
+        return null;
+    }
+
+    public static void limpar() {
+        setores.clear();
+    }
+
 }
