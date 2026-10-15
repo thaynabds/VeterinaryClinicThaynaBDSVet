@@ -3,6 +3,7 @@ package controllers;
 import java.util.List;
 import java.util.Scanner;
 import models.Setor;
+import services.RegraNegocioException;
 import services.SetorService;
 
 public class SetorController {
@@ -20,9 +21,11 @@ public class SetorController {
         System.out.print("Descricao: ");
         String descricao = scanner.nextLine();
 
-        Setor salvo = service.cadastrar(new Setor(nome, descricao));
-        if (salvo != null) {
+        try {
+            Setor salvo = service.cadastrar(new Setor(nome, descricao));
             System.out.println("Setor cadastrado! ID: " + salvo.getId());
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -83,20 +86,28 @@ public class SetorController {
             descricao = existente.getDescricao();
         }
 
-        if (service.atualizar(id, new Setor(id, nome, descricao))) {
-            System.out.println("Setor atualizado!");
-        } else {
-            System.out.println("Falha ao atualizar.");
+        try {
+            if (service.atualizar(id, new Setor(id, nome, descricao))) {
+                System.out.println("Setor atualizado!");
+            } else {
+                System.out.println("Falha ao atualizar.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     public void deletar() {
         System.out.print("\nID do setor a deletar: ");
         long id = lerLong();
-        if (service.deletar(id)) {
-            System.out.println("Setor removido!");
-        } else {
-            System.out.println("Setor nao encontrado.");
+        try {
+            if (service.deletar(id)) {
+                System.out.println("Setor removido!");
+            } else {
+                System.out.println("Setor nao encontrado.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 

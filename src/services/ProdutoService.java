@@ -2,24 +2,16 @@ package services;
 
 import java.util.List;
 import models.Produto;
+import models.Setor;
 import repositories.ProdutoRepository;
+import repositories.SetorRepository;
 
 public class ProdutoService {
     private ProdutoRepository repository = new ProdutoRepository();
+    private SetorRepository setorRepository = new SetorRepository();
 
     public Produto cadastrar(Produto produto) {
-        if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
-            System.out.println("ERRO: nome do produto e obrigatorio.");
-            return null;
-        }
-        if (produto.getValor() < 0) {
-            System.out.println("ERRO: valor nao pode ser negativo.");
-            return null;
-        }
-        if (produto.getQuantidade() < 0) {
-            System.out.println("ERRO: quantidade nao pode ser negativa.");
-            return null;
-        }
+        validar(produto);
         return repository.create(produto);
     }
 
@@ -41,33 +33,41 @@ public class ProdutoService {
 
     public List<Produto> buscarPorFaixaDeValor(double min, double max) {
         if (min < 0 || max < 0) {
-            System.out.println("ERRO: valores da faixa nao podem ser negativos.");
-            return null;
+            throw new RegraNegocioException("Valores da faixa nao podem ser negativos.");
         }
         if (min > max) {
-            System.out.println("ERRO: valor minimo nao pode ser maior que o maximo.");
-            return null;
+            throw new RegraNegocioException("Valor minimo nao pode ser maior que o maximo.");
         }
         return repository.findByFaixaDeValor(min, max);
     }
 
     public boolean atualizar(long id, Produto novo) {
-        if (novo.getNome() == null || novo.getNome().trim().isEmpty()) {
-            System.out.println("ERRO: nome do produto e obrigatorio.");
-            return false;
-        }
-        if (novo.getValor() < 0) {
-            System.out.println("ERRO: valor nao pode ser negativo.");
-            return false;
-        }
-        if (novo.getQuantidade() < 0) {
-            System.out.println("ERRO: quantidade nao pode ser negativa.");
-            return false;
-        }
+        validar(novo);
         return repository.update(id, novo);
     }
 
     public boolean deletar(long id) {
         return repository.delete(id);
+    }
+
+    private void validar(Produto produto) {
+        if (produto.getNome() == null || produto.getNome().trim().isEmpty()) {
+            throw new RegraNegocioException("Nome do produto e obrigatorio.");
+        }
+        if (produto.getValor() < 0) {
+            throw new RegraNegocioException("Valor nao pode ser negativo.");
+        }
+        if (produto.getQuantidade() < 0) {
+            throw new RegraNegocioException("Quantidade nao pode ser negativa.");
+        }
+        if (produto.getSetor() == null || produto.getSetor().trim().isEmpty()) {
+            throw new RegraNegocioException("Setor do produto e obrigatorio.");
+        }
+        Setor setor = setorRepository.findByNomeExato(produto.getSetor());
+        if (setor == null) {
+            throw new RegraNegocioException("Setor nao cadastrado.");
+        }
+        produto.setNome(produto.getNome().trim());
+        produto.setSetor(setor.getNome());
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import models.Animal;
 import models.Tutor;
+import services.RegraNegocioException;
 import services.AnimalService;
 import services.TutorService;
 
@@ -28,21 +29,14 @@ public class AnimalController {
         Animal animal = new Animal(nome, documento, especie);
         preencherDadosComplementares(animal);
 
-        Animal salvo = service.cadastrar(animal);
-        if (salvo == null) {
-            return;
+        try {
+            Animal salvo = service.cadastrar(animal);
+            Tutor tutor = tutorService.buscarPorDocumento(salvo.getDocumentoTutor());
+            System.out.println("Animal cadastrado na ficha de " + tutor.getNomeCompleto() + ".");
+            System.out.println("ID do animal: " + salvo.getId());
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
-
-        Tutor tutor = tutorService.buscarPorDocumento(documento);
-        if (tutor != null) {
-            tutorService.adicionarAnimal(tutor.getId(), salvo);
-            System.out.println("Animal cadastrado e colocado na ficha do tutor " + tutor.getNomeCompleto() + ".");
-        } else {
-            System.out.println("Animal cadastrado! ID: " + salvo.getId());
-            System.out.println("Aviso: nao existe tutor com esse documento. Cadastre o tutor e vincule depois.");
-        }
-
-        System.out.println("ID do animal: " + salvo.getId());
     }
 
     public void listar() {
@@ -146,10 +140,14 @@ public class AnimalController {
         Animal novo = new Animal(id, nome, documento, especie, raca, sexo, pelagem, idade,
                 vacinas, alergias, saude, castrado, observacoes, anotacoes);
 
-        if (service.atualizar(id, novo)) {
-            System.out.println("Animal atualizado!");
-        } else {
-            System.out.println("Falha ao atualizar.");
+        try {
+            if (service.atualizar(id, novo)) {
+                System.out.println("Animal atualizado!");
+            } else {
+                System.out.println("Falha ao atualizar.");
+            }
+        } catch (RegraNegocioException e) {
+            System.out.println(e.getMessage());
         }
     }
 

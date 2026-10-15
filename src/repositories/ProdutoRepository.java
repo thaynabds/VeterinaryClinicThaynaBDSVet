@@ -13,7 +13,7 @@ public class ProdutoRepository {
     }
 
     public List<Produto> findAll() {
-        return produtos;
+        return new ArrayList<Produto>(produtos);
     }
 
     public Produto findById(long id) {
@@ -27,6 +27,9 @@ public class ProdutoRepository {
     }
 
     public List<Produto> findByNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Produto> resultado = new ArrayList<Produto>();
         for (int i = 0; i < produtos.size(); i++) {
             Produto produto = produtos.get(i);
@@ -39,6 +42,9 @@ public class ProdutoRepository {
     }
 
     public List<Produto> findBySetor(String setor) {
+        if (setor == null || setor.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Produto> resultado = new ArrayList<Produto>();
         for (int i = 0; i < produtos.size(); i++) {
             Produto produto = produtos.get(i);
@@ -81,4 +87,31 @@ public class ProdutoRepository {
         produtos.remove(existente);
         return true;
     }
+
+    public int contarPorSetor(String setor) {
+        int total = 0;
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto produto = produtos.get(i);
+            if (produto.getSetor() != null && setor != null
+                    && produto.getSetor().equalsIgnoreCase(setor)) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    public void renomearSetor(String nomeAntigo, String nomeNovo) {
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto produto = produtos.get(i);
+            if (produto.getSetor() != null && nomeAntigo != null
+                    && produto.getSetor().equalsIgnoreCase(nomeAntigo)) {
+                produto.setSetor(nomeNovo);
+            }
+        }
+    }
+
+    public static void limpar() {
+        produtos.clear();
+    }
+
 }
