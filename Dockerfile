@@ -1,10 +1,13 @@
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY . .
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+COPY pom.xml .
+COPY src ./src
+COPY test ./test
+RUN mvn -B -DskipTests package
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/thaynabdsvet-1.1.0.jar app.jar
+ENV PORT=8080
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
