@@ -1,11 +1,19 @@
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 import controllers.AnimalController;
 import controllers.ProdutoController;
 import controllers.SetorController;
 import controllers.TutorController;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        String porta = System.getenv("PORT");
+        if (porta != null && !porta.isBlank()) {
+            publicarPortfolio(Integer.parseInt(porta.trim()));
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         TutorController tutorController = new TutorController(scanner);
         AnimalController animalController = new AnimalController(scanner);
@@ -170,5 +178,26 @@ public class App {
         System.out.println("--- SISTEMA ---");
         System.out.println("0  - Sair");
         System.out.println("============================================");
+    }
+
+    private static void publicarPortfolio(int porta) throws InterruptedException {
+        try {
+            var servidor = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress("0.0.0.0", porta), 0);
+            servidor.createContext("/", troca -> {
+                byte[] corpo = """
+                        {"status":"ok","servico":"Clinica ThaynaBDSVet","mensagem":"Sistema de cadastro em Java no ar. O uso completo e o menu de console."}
+                        """.trim().getBytes(StandardCharsets.UTF_8);
+                troca.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+                troca.sendResponseHeaders(200, corpo.length);
+                troca.getResponseBody().write(corpo);
+                troca.getResponseBody().close();
+            });
+            servidor.start();
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException("Nao foi possivel publicar a pagina do portfolio.", e);
+        }
     }
 }
